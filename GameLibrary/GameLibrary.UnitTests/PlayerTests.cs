@@ -1,3 +1,5 @@
+using FluentAssertions;
+
 namespace GameLibrary.UnitTests;
 
 public class PlayerTests
@@ -12,8 +14,15 @@ public class PlayerTests
         sut.IncreaseLevel();
 
         // Assert
-        Assert.Equal(2, sut.Level);
-        Assert.InRange(sut.Level, 2, 100);
+        // Assert.Equal(2, sut.Level);
+        sut.Level.Should().Be(2);
+
+        // Assert.InRange(sut.Level, 2, 100);
+        sut.Level.Should().BeGreaterThan(1);
+        sut.Level.Should().BeGreaterThanOrEqualTo(2);
+        sut.Level.Should().BePositive();
+        sut.Level.Should().NotBe(1);
+        sut.Level.Should().BeInRange(2, 100);
     }
 
     [Fact]
@@ -26,11 +35,19 @@ public class PlayerTests
         var result = sut.Greet("Hello");
 
         // Assert
-        Assert.Equal("Hello, Alice!", result);
-        Assert.Contains("Alice", result);
-        Assert.EndsWith("Alice!", result);
-        Assert.NotNull(result);
-        Assert.NotEmpty(result);
+        // Assert.Equal("Hello, Alice!", result);
+        result.Should().Be("Hello, Alice!");
+
+        // Assert.Contains("Alice", result);
+        result.Should().Contain("Alice");
+
+        // Assert.EndsWith("Alice!", result );
+        result.Should().EndWith("Alice!");
+
+        // Assert.NotNull(result);
+        // Assert.NotEmpty(result);
+        result.Should().NotBeNullOrEmpty();
+        result.Should().NotBeNullOrWhiteSpace();
     }
 
     [Fact]
@@ -43,6 +60,7 @@ public class PlayerTests
         var sut = new Player("Alice", 1, currentDate);
 
         // Assert
-        Assert.Equal(currentDate, sut.JoinDate);
+        // Assert.Equal(currentDate, sut.JoinDate);
+        sut.JoinDate.Should().Be(currentDate);
     }
 }
