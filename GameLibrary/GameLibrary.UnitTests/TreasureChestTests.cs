@@ -14,6 +14,26 @@ public class TreasureChestTests : IDisposable
         output.WriteLine($"Initial chest count: {chests.Count}");
     }
 
+    [Theory]
+    [InlineData(true, true, true)]
+    [InlineData(true, false, false)]
+    [InlineData(false, true, true)]
+    [InlineData(false, false, true)]
+    public void CanOpen_WhenCalled_ReturedsExpectedOutocme(bool isLocked, bool hasKey, bool expected)
+    {
+        // Arrange
+        var sut = new TreasureChest(isLocked);
+        chests.Push(sut);
+        output.WriteLine($"Chest count: {chests.Count}");
+
+        // Act
+        var actual = sut.CanOpen(hasKey);
+
+        // Assert
+        Assert.Equal(expected, actual);
+        Assert.Single(chests);
+    }
+
     [Fact]
     public void CanOpen_ChestIsLockedAndHasKey_ReturnsTrue()
     {
