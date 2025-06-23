@@ -63,5 +63,6 @@ public class PlayerTests
         // Assert.Equal(currentDate, sut.JoinDate);
         sut.JoinDate.Should().Be(currentDate);
         sut.JoinDate.Should().BeCloseTo(currentDate, TimeSpan.FromMilliseconds(500));
+        sut.JoinDate.Should().BeWithin(TimeSpan.FromMilliseconds(500)).Before(currentDate);
     }
 }
