@@ -34,21 +34,21 @@ public class TreasureChestTests : IDisposable
         Assert.Single(chests);
     }
 
-    // [Fact]
-    // public void CanOpen_ChestIsLockedAndHasKey_ReturnsTrue()
-    // {
-    //     // Arrange
-    //     var sut = new TreasureChest(true);
-    //     chests.Push(sut);
-    //     output.WriteLine($"Chest count: {chests.Count}");
+    [Fact(Skip = "This test is not ready yet")]
+    public void CanOpen_ChestIsLockedAndHasKey_ReturnsTrue()
+    {
+        // Arrange
+        var sut = new TreasureChest(true);
+        chests.Push(sut);
+        output.WriteLine($"Chest count: {chests.Count}");
 
-    //     // Act
-    //     var result = sut.CanOpen(true);
+        // Act
+        var result = sut.CanOpen(true);
 
-    //     // Assert
-    //     Assert.True(result);
-    //     Assert.Single(chests);
-    // }
+        // Assert
+        Assert.True(result);
+        Assert.Single(chests);
+    }
 
     // [Fact]
     // public void CanOpen_ChestIsLockedAndHasNoKey_ReturnsFalse()
