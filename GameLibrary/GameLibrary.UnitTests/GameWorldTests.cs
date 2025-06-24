@@ -1,5 +1,5 @@
 using FluentAssertions;
-using NSubstitute;
+using Moq;
 
 namespace GameLibrary.UnitTests;
 
@@ -10,16 +10,17 @@ public class GameWorldTests
     {
         //Arrange
         var player = new Player("Alice", 10, new DateTime(2020, 1, 1));
-        // var playerStatisticsService = new FakePlayerStatisticsService();
+
         var stats = new PlayerStatistics
         {
             PlayerName = player.Name,
             GamesPlayed = 10,
             TotalScore = 1000
         };
-        // playerStatisticsService.UpdatePlayerStatistics(stats);
-        var statisticsServiceStub = Substitute.For<IPlayerStatisticsService>();
-        statisticsServiceStub.GetPlayerStatistics(player.Name).Returns(stats);
+
+        var statisticsServiceStub = new Mock<IPlayerStatisticsService>();
+        statisticsServiceStub.Setup(s => s.GetPlayerStatistics(player.Name)).Returns(stats);
+
         var expected = new PlayerReportDto(
             player.Name,
             player.Level,
@@ -28,7 +29,7 @@ public class GameWorldTests
             stats.TotalScore,
             stats.TotalScore / stats.GamesPlayed
         );
-        var sut = new GameWorld(statisticsServiceStub);
+        var sut = new GameWorld(statisticsServiceStub.Object);
 
         // Act
         var actual = sut.GetPlayerReport(player);
@@ -48,16 +49,15 @@ public class GameWorldTests
             GamesPlayed = 10,
             TotalScore = 1000
         };
-        var statisticsServiceMock = Substitute.For<IPlayerStatisticsService>();
-        statisticsServiceMock.GetPlayerStatistics(player.Name).Returns(stats);
-        var sut = new GameWorld(statisticsServiceMock);
+        var statisticsServiceMock = new Mock<IPlayerStatisticsService>();
+        statisticsServiceMock.Setup(s => s.GetPlayerStatistics(player.Name)).Returns(stats);
+        var sut = new GameWorld(statisticsServiceMock.Object);
 
         // Act
         sut.RecordPlayerGameWin(player, 20);
 
         // Assert
-        statisticsServiceMock.Received().UpdatePlayerStatistics(Arg.Any<PlayerStatistics>());
-        statisticsServiceMock.Received().UpdatePlayerStatistics(Arg.Is<PlayerStatistics>(stats =>
-            stats.PlayerName == player.Name && stats.GamesPlayed == 11 && stats.TotalScore == 1020));
+        statisticsServiceMock.Verify(s => s.UpdatePlayerStatistics(It.Is<PlayerStatistics>(stats =>
+            stats.PlayerName == player.Name && stats.GamesPlayed == 11 && stats.TotalScore == 1020)));
     }
 }
