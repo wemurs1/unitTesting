@@ -82,4 +82,31 @@ public class PlayerTests
         sut.InventoryItems.Should().Contain(item);
         sut.InventoryItems.Should().ContainSingle(item => item.Id == 101 && item.Name == "Sword");
     }
+
+    [Fact]
+    public void Greet_WithNullOrEmptyGreeting_ThrowsArgumentException()
+    {
+        // Arrange
+        var sut = new Player("Alice", 1, DateTime.Now);
+
+        // Act
+        Action act = () => sut.Greet("");
+
+        // Assert
+        act.Should().Throw<ArgumentException>();
+    }
+
+    [Fact]
+    public void IncreaseLevel_WhenCalled_RaisesLevelUpEvent()
+    {
+        // Arrange
+        var sut = new Player("Alice", 1, DateTime.Now);
+        using var monitoredSut = sut.Monitor();
+
+        // Act
+        sut.IncreaseLevel();
+
+        // Assert
+        monitoredSut.Should().Raise(nameof(sut.LevelUp));
+    }
 }
