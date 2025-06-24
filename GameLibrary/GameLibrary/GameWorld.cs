@@ -2,11 +2,11 @@
 
 public class GameWorld
 {
-    private readonly FileBasedPlayerStatisticsService playerStatisticsService;
+    private readonly IPlayerStatisticsService playerStatisticsService;
 
-    public GameWorld()
+    public GameWorld(IPlayerStatisticsService playerStatisticsService)
     {
-        playerStatisticsService = new("statistics.json");
+        this.playerStatisticsService = playerStatisticsService;
     }
 
     public PlayerReportDto GetPlayerReport(Player player)
@@ -30,5 +30,5 @@ public class GameWorld
         stats.TotalScore += score;
         stats.GamesPlayed += 1;
         playerStatisticsService.UpdatePlayerStatistics(stats);
-    }    
+    }
 }
